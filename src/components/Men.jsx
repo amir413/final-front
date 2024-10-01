@@ -7,21 +7,20 @@ export default function Men() {
   const [error, setError] = useState(null);
 
   // Function to fetch users
-  const fetchUsers = () => {
-    axios.get('http://localhost:3001/getUsers') // Ensure your backend is running on port 3001
-      .then(res => {
-        setUsers(res.data);
-        setError(null);
-      })
-      .catch(err => {
-        console.log(err);
-        setError('Failed to fetch users. Please try again later.');
-      });
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('https://final-back-rho.vercel.app/getUsers'); // Change to your Vercel endpoint
+      setUsers(response.data);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to fetch users. Please try again later.');
+    }
   };
 
   useEffect(() => {
     fetchUsers();
-    
+
     const interval = setInterval(fetchUsers, 9000); // Poll every 9 seconds
 
     return () => clearInterval(interval); // Clean up on component unmount
@@ -40,15 +39,15 @@ export default function Men() {
             {/* Image Section */}
             <div className="relative w-full aspect-w-16 aspect-h-9">
               <img 
-                src={user.image ? `http://localhost:3001/images/${user.image}` : 'https://via.placeholder.com/150'} 
-                alt={user.name}
+                src={user.image ? `https://final-back-rho.vercel.app/images/${user.image}` : 'https://via.placeholder.com/150'} 
+                alt={user.title} // Change to title for better accessibility
                 className="object-cover w-full h-[65vh]"
               />
             </div>
             
             {/* Description Section */}
             <div className="p-4 flex-grow text-left">
-              <p className="mb-2">{user.title}</p>
+              <p className="mb-2">{user.title}</p> {/* Changed from user.name to user.title */}
               <p className="text-red-600 mb-1">{user.price} EGP</p>
             </div>
           </Link>
