@@ -10,7 +10,10 @@ export default function Men() {
   // Function to fetch items
   const fetchItems = async () => {
     try {
-      const endpoint = window.location.hostname === 'localhost' ?'https://final-back-rho.vercel.app/getItems' :'https://localhost3001/getItems';
+      // Correct the endpoints for local and production environments
+      const endpoint = window.location.hostname === 'localhost'
+        ? 'http://localhost:3001/getItems'
+        : 'https://final-back-rho.vercel.app/getItems';
 
       const response = await axios.get(endpoint);
       console.log(response.data); // Log the data to check its structure
