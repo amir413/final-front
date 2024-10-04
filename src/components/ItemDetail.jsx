@@ -8,7 +8,7 @@ export default function ItemDetail() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/getUser/${id}`) // Adjust endpoint to match your backend
+    axios.get(`https://final-back-rho.vercel.app/getItems/${id}`) // Adjust endpoint to match your backend
       .then(res => {
         setItem(res.data);
         setError(null);

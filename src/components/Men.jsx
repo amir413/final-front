@@ -9,11 +9,12 @@ export default function Men() {
     const [sortOrder, setSortOrder] = useState('asc');
     const [filter, setFilter] = useState('');
     const [priceRange, setPriceRange] = useState([0, 999]);
+    const [menuOpen, setMenuOpen] = useState(false); // State to toggle menu
 
     const fetchItems = async () => {
         try {
             const endpoint = window.location.hostname === 'localhost'
-                ? 'http://localhost:3001/getItems'
+                ? 'https://final-back-rho.vercel.app/getItems'
                 : 'https://final-back-rho.vercel.app/getItems';
 
             const response = await axios.get(endpoint);
@@ -33,11 +34,7 @@ export default function Men() {
 
     const sortedItems = () => {
         return [...items].sort((a, b) => {
-            if (sortOrder === 'asc') {
-                return a.price - b.price;
-            } else {
-                return b.price - a.price;
-            }
+            return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
         });
     };
 
@@ -61,62 +58,114 @@ export default function Men() {
         setPriceRange([0, value]);
     };
 
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen); // Toggle the burger menu
+    };
+
     return (
-        <div className="flex p-6">
-            <div className="flex flex-col ml-auto mr-6 w-[300px]">
-                {error && <div className="bg-red-100 text-red-700 p-4 mb-4 rounded">{error}</div>}
-                <div className="flex flex-col mb-4">
-                    <select 
-                        value={sortOrder} 
-                        onChange={(e) => setSortOrder(e.target.value)} 
-                        className="border p-2 mb-2"
-                    >
-                        <option value="asc">Price: Low to High</option>
-                        <option value="desc">Price: High to Low</option>
-                    </select>
-                </div>
-                <button 
-                    onClick={handlePriceRangeClick} 
-                    className="bg-blue-500 text-white p-2 rounded mb-4"
+        <div className="p-6 w-full relative">
+            {/* Navbar and Filter/Sort Controls */}
+            <div className="flex justify-end mb-6"> {/* Aligning the button to the right */}
+                {/* Burger Menu Button */}
+                <button
+                    className="p-2 border border-gray-300 rounded"
+                    onClick={toggleMenu}
                 >
-                    Price 100 - 200
+                    {/* Burger Icon (turns into X when menu is open) */}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`h-6 w-6 ${menuOpen ? 'hidden' : 'block'}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                    {/* X Icon (when the menu is open) */}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`h-6 w-6 ${menuOpen ? 'block' : 'hidden'}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
-                <div className="mb-4">
-                    <label className="mr-2">Max Price: {priceRange[1]}</label>
-                    <div className="w-[100px]">
-                        <input 
-                            type="range" 
-                            min="0" 
-                            max="9000" 
-                            step="1" 
-                            value={priceRange[1]} 
-                            onChange={handleScrollbarChange} 
+            </div>
+
+            {/* Sliding Filter and Sort Menu */}
+            <div
+                className={`fixed top-0 right-0 h-full w-64 bg-gray-100 shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            >
+                <div className="p-4">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold">Filter & Sort</h2>
+                        {/* X Icon to close the menu */}
+                        <button onClick={toggleMenu} className="text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" stroke="black"></path>
+</svg>
+
+                        </button>
+                    </div>
+
+                    {/* Sort Dropdown */}
+                    <div className="mb-4">
+                        <select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            className="border p-2 w-full"
+                        >
+                            <option value="asc">Price: Low to High</option>
+                            <option value="desc">Price: High to Low</option>
+                        </select>
+                    </div>
+
+                    {/* Price Filter */}
+                    <button
+                        onClick={handlePriceRangeClick}
+                        className="bg-black text-white p-2 w-full rounded mb-4"
+                    >
+                        Price 100 - 200
+                    </button>
+
+                    <div className="mb-4">
+                        <label className="mr-2">Max Price: {priceRange[1]}</label>
+                        <input
+                            type="range"
+                            min="0"
+                            max="9000"
+                            step="1"
+                            value={priceRange[1]}
+                            onChange={handleScrollbarChange}
                             className="w-full"
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="flex-grow max-w-[1330px] mx-auto">
-                <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+            {/* Cards Section */}
+            <div className="flex-grow max-w-[1100px] mx-auto mt-6 z-20 relative">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {Array.isArray(filteredItems()) && filteredItems().length > 0 ? (
                         filteredItems().map(item => (
                             <Link
                                 key={item._id}
                                 to={`/item/${item._id}`}
-                                className="overflow-hidden flex flex-col border border-gray-200 max-w-[250px] mx-auto" // Set max width for card
+                                className="overflow-hidden flex flex-col border border-gray-200 relative"
                             >
                                 {/* Image Section */}
                                 <div className="relative w-full aspect-w-16 aspect-h-9">
-                                    <img 
-                                        src={Array.isArray(item.imageUrls) && item.imageUrls.length > 0 
-                                            ? item.imageUrls[0] 
-                                            : 'https://via.placeholder.com/150'} 
+                                    <img
+                                        src={Array.isArray(item.imageUrls) && item.imageUrls.length > 0
+                                            ? item.imageUrls[0]
+                                            : 'https://via.placeholder.com/150'}
                                         alt={item.title}
-                                        className="object-cover w-full h-[40vh]"
+                                        className="object-cover w-full h-[35vh]"
                                     />
                                 </div>
-                                
+
                                 {/* Description Section */}
                                 <div className="p-2 flex-grow text-left">
                                     <p className="mb-1">{item.title}</p>
