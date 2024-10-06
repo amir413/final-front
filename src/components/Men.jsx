@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 export default function Men() {
     const [items, setItems] = useState([]);
@@ -66,47 +68,27 @@ export default function Men() {
         <div className="p-6 w-full relative">
             {/* Navbar and Filter/Sort Controls */}
             <div className="flex justify-end mb-6"> {/* Aligning the button to the right */}
-                {/* Burger Menu Button */}
+                {/* Filter Button with Font Awesome Icon */}
                 <button
-                    className="p-2 border border-gray-300 rounded"
+                    className="p-2 mr-4 border border-gray-300 rounded"
                     onClick={toggleMenu}
                 >
-                    {/* Burger Icon (turns into X when menu is open) */}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-6 w-6 ${menuOpen ? 'hidden' : 'block'}`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                    {/* X Icon (when the menu is open) */}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-6 w-6 ${menuOpen ? 'block' : 'hidden'}`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <FontAwesomeIcon icon={faFilter} className="text-black mr-1" /><span>Filter & Sort</span>
                 </button>
             </div>
 
             {/* Sliding Filter and Sort Menu */}
             <div
-                className={`fixed top-0 right-0 h-full w-64 bg-gray-100 shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed top-0 right-0 h-full w-68 bg-gray-100 shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 <div className="p-4">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-lg font-semibold">Filter & Sort</h2>
                         {/* X Icon to close the menu */}
                         <button onClick={toggleMenu} className="text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" stroke="black"></path>
-</svg>
-
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M6 18L18 6M6 6l12 12" stroke="black"></path>
+                            </svg>
                         </button>
                     </div>
 
@@ -131,7 +113,7 @@ export default function Men() {
                     </button>
 
                     <div className="mb-4">
-                        <label className="mr-2">Max Price: {priceRange[1]}</label>
+                        <label className="mr-2 text-black">Max Price: {priceRange[1]}</label>
                         <input
                             type="range"
                             min="0"
@@ -139,9 +121,10 @@ export default function Men() {
                             step="1"
                             value={priceRange[1]}
                             onChange={handleScrollbarChange}
-                            className="w-full"
+                            className="w-full range-black"
                         />
                     </div>
+
                 </div>
             </div>
 
@@ -152,7 +135,7 @@ export default function Men() {
                         filteredItems().map(item => (
                             <Link
                                 key={item._id}
-                                to={`/item/${item._id}`}
+                                to={`/item/${item._id}`} // This links to the ItemDetail page
                                 className="overflow-hidden flex flex-col border border-gray-200 relative"
                             >
                                 {/* Image Section */}
@@ -171,7 +154,7 @@ export default function Men() {
                                     <p className="mb-1">{item.title}</p>
                                     <p className="text-red-600 mb-1">{item.price} EGP</p>
                                 </div>
-                            </Link>
+                            </Link> // This Link wraps the entire card content
                         ))
                     ) : (
                         <div>No items found.</div>
