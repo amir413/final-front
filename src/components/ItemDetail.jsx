@@ -10,7 +10,7 @@ function ItemDetail() {
 
     // Determine base URL based on the environment
     const baseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://final-back-rho.vercel.app/getItems' 
+        ? 'https://final-back-rho.vercel.app/api/items' 
         : 'http://localhost:3001/api/items';
 
     useEffect(() => {
