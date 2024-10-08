@@ -126,7 +126,7 @@ export default function Chil() {
 
                     <button
                         onClick={handlePriceRangeClick}
-                        className={`p-2 w-full rounded mb-4 ${isPriceRangeSet ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
+                        className={`p-2 w-full rounded mb-4 ${isPriceRangeSet ? 'bg-black text-white' : 'bg-black text-white'}`}
                     >
                         {isPriceRangeSet ? 'Cancel Price Range' : 'Set Price Range: 100 - 200'}
                     </button>
