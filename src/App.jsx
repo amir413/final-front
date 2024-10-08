@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
-import Footer from './components/footer'; // Ensure consistent naming
-import Navbar from './components/navbar'; // Ensure consistent naming
+import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 import Women from './components/Women';
 import Men from './components/Men';
 import Children from './components/Children';
