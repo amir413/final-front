@@ -20,11 +20,7 @@ export default function Men() {
                 : 'https://final-back-rho.vercel.app/getItems';
 
             const response = await axios.get(endpoint);
-            const itemsWithActiveIndex = response.data.map(item => ({
-                ...item,
-                activeImageIndex: 0 // Initialize activeImageIndex
-            }));
-            setItems(itemsWithActiveIndex);
+            setItems(response.data);
             setError(null);
         } catch (err) {
             console.error(err);
@@ -56,7 +52,13 @@ export default function Men() {
     }
 
     const handlePriceRangeClick = () => {
-        setPriceRange([100, 200]);
+        if (priceRange[0] === 100 && priceRange[1] === 200) {
+            // Reset to original range
+            setPriceRange([0, 999]);
+        } else {
+            // Set to price range 100 - 200
+            setPriceRange([100, 200]);
+        }
     };
 
     const handleScrollbarChange = (event) => {
@@ -71,10 +73,8 @@ export default function Men() {
     const handleImageChange = (index, delta) => {
         setItems(prevItems => {
             const newItems = [...prevItems];
-            const totalImages = newItems[index].imageUrls.length;
-            const currentIndex = newItems[index].activeImageIndex;
-            const newIndex = (currentIndex + delta + totalImages) % totalImages; // Cycle through images
-            newItems[index].activeImageIndex = newIndex; // Update activeImageIndex
+            const newIndex = (index + delta + newItems[index].imageUrls.length) % newItems[index].imageUrls.length;
+            newItems[index].activeImageIndex = newIndex; // Set the new index
             return newItems;
         });
     };
@@ -120,7 +120,7 @@ export default function Men() {
                         onClick={handlePriceRangeClick}
                         className="bg-black text-white p-2 w-full rounded mb-4"
                     >
-                        Price 100 - 200
+                        {priceRange[0] === 100 && priceRange[1] === 200 ? 'Reset Price Range' : 'Price 100 - 200'}
                     </button>
 
                     <div className="mb-4">
@@ -143,7 +143,7 @@ export default function Men() {
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {Array.isArray(filteredItems()) && filteredItems().length > 0 ? (
                         filteredItems().map((item, index) => {
-                            const activeImageIndex = item.activeImageIndex; // Get the active image index
+                            const activeImageIndex = item.activeImageIndex || 0; // Default to first image
                             return (
                                 <div key={item._id} className="overflow-hidden flex flex-col border border-gray-200 relative">
                                     {/* Image Section */}
