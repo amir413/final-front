@@ -62,11 +62,6 @@ function ItemDetail() {
                         Add to Wishlist
                     </button>
                 </div>
-
-                {/* Back to Items Button */}
-                <Link to="/items" className="block mt-4 text-center text-black hover:underline">
-                    Back to Items
-                </Link>
             </div>
         </div>
     );
