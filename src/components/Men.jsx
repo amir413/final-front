@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
-export default function Men() {
+export default function Chil() {
     const [items, setItems] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -12,6 +12,7 @@ export default function Men() {
     const [filter, setFilter] = useState('');
     const [priceRange, setPriceRange] = useState([0, 999]);
     const [menuOpen, setMenuOpen] = useState(false); // State to toggle menu
+    const [isPriceRangeSet, setIsPriceRangeSet] = useState(false); // State to check if price range is set
 
     const fetchItems = async () => {
         try {
@@ -20,7 +21,11 @@ export default function Men() {
                 : 'https://final-back-rho.vercel.app/getItems';
 
             const response = await axios.get(endpoint);
-            setItems(response.data);
+            const itemsWithActiveIndex = response.data.map(item => ({
+                ...item,
+                activeImageIndex: 0 // Initialize activeImageIndex
+            }));
+            setItems(itemsWithActiveIndex);
             setError(null);
         } catch (err) {
             console.error(err);
@@ -52,13 +57,14 @@ export default function Men() {
     }
 
     const handlePriceRangeClick = () => {
-        if (priceRange[0] === 100 && priceRange[1] === 200) {
-            // Reset to original range
+        if (isPriceRangeSet) {
+            // Reset price range if already set
             setPriceRange([0, 999]);
         } else {
-            // Set to price range 100 - 200
+            // Set price range if not already set
             setPriceRange([100, 200]);
         }
+        setIsPriceRangeSet(!isPriceRangeSet); // Toggle the state
     };
 
     const handleScrollbarChange = (event) => {
@@ -73,8 +79,10 @@ export default function Men() {
     const handleImageChange = (index, delta) => {
         setItems(prevItems => {
             const newItems = [...prevItems];
-            const newIndex = (index + delta + newItems[index].imageUrls.length) % newItems[index].imageUrls.length;
-            newItems[index].activeImageIndex = newIndex; // Set the new index
+            const totalImages = newItems[index].imageUrls.length;
+            const currentIndex = newItems[index].activeImageIndex;
+            const newIndex = (currentIndex + delta + totalImages) % totalImages; // Cycle through images
+            newItems[index].activeImageIndex = newIndex; // Update activeImageIndex
             return newItems;
         });
     };
@@ -118,9 +126,9 @@ export default function Men() {
 
                     <button
                         onClick={handlePriceRangeClick}
-                        className="bg-black text-white p-2 w-full rounded mb-4"
+                        className={`p-2 w-full rounded mb-4 ${isPriceRangeSet ? 'bg-red-600 text-white' : 'bg-black text-white'}`}
                     >
-                        {priceRange[0] === 100 && priceRange[1] === 200 ? 'Reset Price Range' : 'Price 100 - 200'}
+                        {isPriceRangeSet ? 'Cancel Price Range' : 'Set Price Range: 100 - 200'}
                     </button>
 
                     <div className="mb-4">
@@ -143,7 +151,7 @@ export default function Men() {
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {Array.isArray(filteredItems()) && filteredItems().length > 0 ? (
                         filteredItems().map((item, index) => {
-                            const activeImageIndex = item.activeImageIndex || 0; // Default to first image
+                            const activeImageIndex = item.activeImageIndex; // Get the active image index
                             return (
                                 <div key={item._id} className="overflow-hidden flex flex-col border border-gray-200 relative">
                                     {/* Image Section */}

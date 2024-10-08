@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
-export default function children() {
+export default function chil() {
     const [items, setItems] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -22,7 +22,8 @@ export default function children() {
             const response = await axios.get(endpoint);
             const itemsWithActiveIndex = response.data.map(item => ({
                 ...item,
-                activeImageIndex: 0 // Initialize activeImageIndex
+                activeImageIndex: 0, // Initialize activeImageIndex
+                swipeCount: 0 // Initialize swipe count
             }));
             setItems(itemsWithActiveIndex);
             setError(null);
@@ -73,8 +74,20 @@ export default function children() {
             const newItems = [...prevItems];
             const totalImages = newItems[index].imageUrls.length;
             const currentIndex = newItems[index].activeImageIndex;
-            const newIndex = (currentIndex + delta + totalImages) % totalImages; // Cycle through images
-            newItems[index].activeImageIndex = newIndex; // Update activeImageIndex
+
+            // Increment swipe count
+            newItems[index].swipeCount += 1;
+
+            // Check if the swipe count exceeds 2
+            if (newItems[index].swipeCount > 2) {
+                // Reset swipe count and activeImageIndex
+                newItems[index].swipeCount = 0;
+                newItems[index].activeImageIndex = (currentIndex + delta + totalImages) % totalImages; // Change index only
+            } else {
+                // Change activeImageIndex based on swipe
+                newItems[index].activeImageIndex = (currentIndex + delta + totalImages) % totalImages; // Cycle through images
+            }
+
             return newItems;
         });
     };
