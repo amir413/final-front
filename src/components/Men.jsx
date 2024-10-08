@@ -16,9 +16,9 @@ export default function Chil() {
 
     const fetchItems = async () => {
         try {
-            const endpoint = window.location.hostname === 'localhost'
-                ? 'https://final-back-rho.vercel.app/getItems'
-                : 'https://final-back-rho.vercel.app/getItems';
+            const endpoint = window.location.hostname === 'http://localhost:3001/getItems'
+                ? 'http://localhost:3001/getItems'
+                : 'http://localhost:3001/getItems';
 
             const response = await axios.get(endpoint);
             const itemsWithActiveIndex = response.data.map(item => ({
