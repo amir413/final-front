@@ -20,7 +20,11 @@ export default function Men() {
                 : 'https://final-back-rho.vercel.app/getItems';
 
             const response = await axios.get(endpoint);
-            setItems(response.data);
+            const itemsWithActiveIndex = response.data.map(item => ({
+                ...item,
+                activeImageIndex: 0 // Initialize activeImageIndex
+            }));
+            setItems(itemsWithActiveIndex);
             setError(null);
         } catch (err) {
             console.error(err);
@@ -64,11 +68,21 @@ export default function Men() {
         setMenuOpen(!menuOpen); // Toggle the burger menu
     };
 
+    const handleImageChange = (index, delta) => {
+        setItems(prevItems => {
+            const newItems = [...prevItems];
+            const totalImages = newItems[index].imageUrls.length;
+            const currentIndex = newItems[index].activeImageIndex;
+            const newIndex = (currentIndex + delta + totalImages) % totalImages; // Cycle through images
+            newItems[index].activeImageIndex = newIndex; // Update activeImageIndex
+            return newItems;
+        });
+    };
+
     return (
         <div className="p-6 w-full relative">
             {/* Navbar and Filter/Sort Controls */}
-            <div className="flex justify-end mb-6"> {/* Aligning the button to the right */}
-                {/* Filter Button with Font Awesome Icon */}
+            <div className="flex justify-end mb-6">
                 <button
                     className="p-2 mr-4 border border-gray-300 rounded"
                     onClick={toggleMenu}
@@ -84,7 +98,6 @@ export default function Men() {
                 <div className="p-4">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-lg font-semibold">Filter & Sort</h2>
-                        {/* X Icon to close the menu */}
                         <button onClick={toggleMenu} className="text-red-500">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path d="M6 18L18 6M6 6l12 12" stroke="black"></path>
@@ -92,7 +105,6 @@ export default function Men() {
                         </button>
                     </div>
 
-                    {/* Sort Dropdown */}
                     <div className="mb-4">
                         <select
                             value={sortOrder}
@@ -104,7 +116,6 @@ export default function Men() {
                         </select>
                     </div>
 
-                    {/* Price Filter */}
                     <button
                         onClick={handlePriceRangeClick}
                         className="bg-black text-white p-2 w-full rounded mb-4"
@@ -124,7 +135,6 @@ export default function Men() {
                             className="w-full range-black"
                         />
                     </div>
-
                 </div>
             </div>
 
@@ -132,30 +142,47 @@ export default function Men() {
             <div className="flex-grow max-w-[1100px] mx-auto mt-6 z-20 relative">
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {Array.isArray(filteredItems()) && filteredItems().length > 0 ? (
-                        filteredItems().map(item => (
-                            <Link
-                                key={item._id}
-                                to={`/item/${item._id}`} // This links to the ItemDetail page
-                                className="overflow-hidden flex flex-col border border-gray-200 relative"
-                            >
-                                {/* Image Section */}
-                                <div className="relative w-full aspect-w-16 aspect-h-9">
-                                    <img
-                                        src={Array.isArray(item.imageUrls) && item.imageUrls.length > 0
-                                            ? item.imageUrls[0]
-                                            : 'https://via.placeholder.com/150'}
-                                        alt={item.title}
-                                        className="object-cover w-full h-[35vh]"
-                                    />
-                                </div>
+                        filteredItems().map((item, index) => {
+                            const activeImageIndex = item.activeImageIndex; // Get the active image index
+                            return (
+                                <div key={item._id} className="overflow-hidden flex flex-col border border-gray-200 relative">
+                                    {/* Image Section */}
+                                    <div className="relative w-full aspect-w-16 aspect-h-9">
+                                        <img
+                                            src={Array.isArray(item.imageUrls) && item.imageUrls.length > 0
+                                                ? item.imageUrls[activeImageIndex]
+                                                : 'https://via.placeholder.com/150'}
+                                            alt={item.title}
+                                            className="object-cover w-full h-[35vh]"
+                                        />
+                                        {item.imageUrls.length > 1 && (
+                                            <>
+                                                {/* Left Arrow */}
+                                                <button
+                                                    onClick={() => handleImageChange(index, -1)}
+                                                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full"
+                                                >
+                                                    &lt;
+                                                </button>
+                                                {/* Right Arrow */}
+                                                <button
+                                                    onClick={() => handleImageChange(index, 1)}
+                                                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full"
+                                                >
+                                                    &gt;
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
 
-                                {/* Description Section */}
-                                <div className="p-2 flex-grow text-left">
-                                    <p className="mb-1">{item.title}</p>
-                                    <p className="text-red-600 mb-1">{item.price} EGP</p>
+                                    {/* Description Section */}
+                                    <Link to={`/item/${item._id}`} className="p-2 flex-grow text-left">
+                                        <p className="mb-1">{item.title}</p>
+                                        <p className="text-red-600 mb-1">{item.price} EGP</p>
+                                    </Link>
                                 </div>
-                            </Link> // This Link wraps the entire card content
-                        ))
+                            );
+                        })
                     ) : (
                         <div>No items found.</div>
                     )}
