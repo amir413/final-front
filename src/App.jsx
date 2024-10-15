@@ -20,6 +20,7 @@ function App() {
         <Route path="/women" element={<Women />} />
         <Route path="/men" element={<Men />} />
         <Route path="/children" element={<Children />} />
+        <Router path="Footer" element={<Footer />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/login" element={<Login />} />       {/* Added Login Route */}
         <Route path="/register" element={<Register />} /> {/* Added Register Route */}
