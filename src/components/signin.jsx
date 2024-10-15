@@ -12,14 +12,19 @@ const SignIn = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Set loading to true
-
+    
         try {
-            const response = await axios.post('https://final-back-rho.vercel.app/api/login', { // Updated endpoint
+            const response = await axios.post('https://final-back-rho.vercel.app/api/login', {
                 username,
                 password,
             });
+
+            // Store the username in local storage
+            localStorage.setItem('username', username);
+    
             // Redirect to the home page on successful login
             navigate('/'); // Redirect to home
+            window.location.reload(); // Refresh the page to reflect changes
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
         } finally {
