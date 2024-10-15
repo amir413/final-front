@@ -15,7 +15,7 @@ const SignIn = () => {
 
         try {
             const response = await axios.post('https://final-back-rho.vercel.app/api/login', {
-                username,
+                username ,
                 password,
             });
             // Redirect to the home page on successful login
