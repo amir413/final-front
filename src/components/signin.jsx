@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
-const SignIn = () => {
+const signin = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -47,4 +47,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default signin;
