@@ -7,8 +7,8 @@ import Women from './components/Women';
 import Men from './components/Men';
 import Children from './components/Children';
 import ItemDetail from './components/ItemDetail';
-import Login from './components/Signin'; // Import your Login component
 import Register from './components/Register'; // Import your Register component
+import SignIn from './components/signin';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path="/women" element={<Women />} />
         <Route path="/men" element={<Men />} />
         <Route path="/children" element={<Children />} />
-        <Route path="/login" element={<Login />} />       {/* Added Login Route */}
+        <Route path="/signin" element={<SignIn />} />       {/* Added Login Route */}
         <Route path="/register" element={<Register />} /> {/* Added Register Route */}
       </Routes>
       <Footer /> {/* Footer will be rendered on all pages */}
