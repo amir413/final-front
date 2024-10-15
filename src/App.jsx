@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
-import Footer from './components/Footer'; // Ensure correct casing for import
+import Footer from './components/footer'; // Ensure correct casing for import
 import Navbar from './components/navbar'; // Ensure correct casing for import
 import Women from './components/Women';
 import Men from './components/Men';
@@ -20,7 +20,7 @@ function App() {
         <Route path="/women" element={<Women />} />
         <Route path="/men" element={<Men />} />
         <Route path="/children" element={<Children />} />
-        <Router path="Footer" element={<Footer />} />
+        <Router path="footer" element={<Footer />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/login" element={<Login />} />       {/* Added Login Route */}
         <Route path="/register" element={<Register />} /> {/* Added Register Route */}
