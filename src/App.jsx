@@ -8,7 +8,7 @@ import Men from './components/Men';
 import Children from './components/Children';
 import ItemDetail from './components/ItemDetail';
 import Register from './components/Register'; // Import your Register component
-import SignIn from './components/SignIn';
+import SignIn from './components/SignIn'; // Consistent casing
 
 function App() {
   return (
@@ -20,8 +20,9 @@ function App() {
         <Route path="/women" element={<Women />} />
         <Route path="/men" element={<Men />} />
         <Route path="/children" element={<Children />} />
-        <Route path="/SignIn" element={<SignIn />} />       {/* Added Login Route */}
-        <Route path="/register" element={<Register />} /> {/* Added Register Route */}
+        <Route path="/signin" element={<SignIn />} /> {/* Changed to lowercase */}
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<h1>404 - Not Found</h1>} /> {/* Catch-all route for 404 */}
       </Routes>
       <Footer /> {/* Footer will be rendered on all pages */}
     </Router>
