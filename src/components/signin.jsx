@@ -14,7 +14,7 @@ const SignIn = () => {
         setLoading(true); // Set loading to true
 
         try {
-            const response = await axios.post('https://final-back-rho.vercel.app/api/login', {
+            const response = await axios.post('https://final-back-rho.vercel.app/api/signin', {
                 username ,
                 password,
             });

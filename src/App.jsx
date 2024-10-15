@@ -22,7 +22,6 @@ function App() {
         <Route path="/children" element={<Children />} />
         <Route path="/signin" element={<SignIn />} /> {/* Changed to lowercase */}
         <Route path="/register" element={<Register />} />
-        <Route path="*" element={<h1>404 - Not Found</h1>} /> {/* Catch-all route for 404 */}
       </Routes>
       <Footer /> {/* Footer will be rendered on all pages */}
     </Router>

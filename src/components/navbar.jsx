@@ -94,7 +94,7 @@ const Navbar = ({ user, handleLogout }) => {
               ) : (
                 <>
                   <li className="cursor-pointer mb-5">
-                    <Link to="/login">Login</Link> {/* Link to Login */}
+                    <Link to="/signin">Login</Link> {/* Link to Login */}
                   </li>
                   <li className="cursor-pointer mb-5">
                     <Link to="/register">Register</Link> {/* Link to Register */}
@@ -150,7 +150,7 @@ const Navbar = ({ user, handleLogout }) => {
           ) : (
             <>
               <li className="cursor-pointer pb-4" onClick={() => setIsOpen(false)}>
-                <Link to="/login">Login</Link> {/* Link to Login */}
+                <Link to="/signin">Login</Link> {/* Link to Login */}
               </li>
               <li className="cursor-pointer pb-4" onClick={() => setIsOpen(false)}>
                 <Link to="/register">Register</Link> {/* Link to Register */}
