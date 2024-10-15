@@ -14,7 +14,7 @@ const Register = () => {
             // Log the form data before sending to see if email is correctly populated
             console.log({ username, password, email });
 
-            await axios.post('http://localhost:3001/api/register', {
+            await axios.post('https://final-back-rho.vercel.app/api/register', {
                 username,
                 password,
                 email,  // Make sure email is sent in the body
