@@ -2,23 +2,28 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
-const signin = () => {
+const SignIn = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false); // Added loading state
     const navigate = useNavigate(); // Initialize navigate
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Set loading to true
+
         try {
             const response = await axios.post('https://final-back-rho.vercel.app/api/login', {
                 username,
                 password,
             });
             // Redirect to the home page on successful login
-            navigate('/'); // or use "/" for the home route
+            navigate('/'); // Redirect to home
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
+        } finally {
+            setLoading(false); // Set loading to false after request
         }
     };
 
@@ -40,11 +45,13 @@ const signin = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Sign In</button>
+                <button type="submit" disabled={loading}> {/* Disable button while loading */}
+                    {loading ? 'Signing In...' : 'Sign In'}
+                </button>
             </form>
             {error && <p>{error}</p>}
         </div>
     );
 };
 
-export default signin;
+export default SignIn;
