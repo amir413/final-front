@@ -7,25 +7,23 @@ import Women from './components/Women';
 import Men from './components/Men';
 import Children from './components/Children';
 import ItemDetail from './components/ItemDetail';
-import Login from './components/signin'; // Import your Login component
+import Login from './components/Signin'; // Import your Login component
 import Register from './components/Register'; // Import your Register component
 
 function App() {
   return (
     <Router>
-      <Navbar />
+      <Navbar /> {/* Navbar will be rendered on all pages */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/item/:id" element={<ItemDetail />} />
         <Route path="/women" element={<Women />} />
         <Route path="/men" element={<Men />} />
         <Route path="/children" element={<Children />} />
-        <Router path="footer" element={<Footer />} />
-        <Route path="/navbar" element={<Navbar />} />
         <Route path="/login" element={<Login />} />       {/* Added Login Route */}
         <Route path="/register" element={<Register />} /> {/* Added Register Route */}
       </Routes>
-      <Footer />
+      <Footer /> {/* Footer will be rendered on all pages */}
     </Router>
   );
 }
