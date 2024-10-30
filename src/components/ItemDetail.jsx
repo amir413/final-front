@@ -1,4 +1,3 @@
-// Import required hooks and packages
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -10,7 +9,6 @@ function ItemDetail() {
     const [loading, setLoading] = useState(true);
     const [isInWishlist, setIsInWishlist] = useState(false);
     
-    // Fetch username from local storage or context
     const username = localStorage.getItem('username'); // Adjust based on how you store username
 
     const baseUrl = process.env.NODE_ENV === 'production'
@@ -20,6 +18,10 @@ function ItemDetail() {
     const wishlistBaseUrl = process.env.NODE_ENV === 'production'
         ? 'https://final-back-rho.vercel.app/api/wishlist'
         : 'http://localhost:3001/api/wishlist';
+
+    const cartBaseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://final-back-rho.vercel.app/api/cart'
+        : 'http://localhost:3001/api/cart';
 
     useEffect(() => {
         const fetchItem = async () => {
@@ -72,8 +74,17 @@ function ItemDetail() {
         }
     };
 
-    const addToCart = () => {
-        alert('Add to cart functionality not implemented yet.');
+    const addToCart = async () => {
+        try {
+            await axios.post(`${cartBaseUrl}/add`, {
+                username,
+                itemId: item._id, // Use the item's ID
+            });
+            alert('Item added to cart!');
+        } catch (err) {
+            console.error('Error adding item to cart:', err);
+            alert('Failed to add item to cart');
+        }
     };
 
     if (loading) return <div className="text-center">Loading item details...</div>;

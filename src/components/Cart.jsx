@@ -1,71 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-export default function Cart() {
+export default function Cart() {  // Capitalized component name
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const username = localStorage.getItem('username'); // Replace with fetch from backend if needed
 
-    const fetchCartItems = async () => {
+    const cartBaseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://final-back-rho.vercel.app/api/cart'
+        : 'http://localhost:3001/api/cart';
+
+    useEffect(() => {
+        const fetchCart = async () => {  // Corrected function name
+            try {
+                const response = await axios.get(`${cartBaseUrl}/${username}`);
+                setCartItems(response.data.items); // Ensure 'items' exists in the response
+            } catch (err) {
+                setError('Failed to load cart items');
+                console.error(err);
+            }
+        };
+
+        if (username) fetchCart();  // Add a conditional check to avoid calling if no username
+    }, [username]);
+
+    // Function to remove an item from the cart
+    const removeFromCart = async (itemId) => {
         try {
-            const endpoint = window.location.hostname === 'localhost'
-                ? 'http://localhost:3001/getCartItems'
-                : 'https://final-back-rho.vercel.app/getCartItems';
-            const response = await axios.get(endpoint);
-            setCartItems(response.data);
-            setError(null);
+            await axios.delete(`${cartBaseUrl}/remove`, { 
+                data: { username, itemId } 
+            });
+            // Update state to remove the item locally
+            setCartItems(prevItems => prevItems.filter(item => item._id !== itemId));
+            alert('Item removed from cart');
         } catch (err) {
-            console.error(err);
-            setError('Failed to fetch cart items. Please try again later.');
-        } finally {
-            setLoading(false);
+            console.error('Error removing item:', err);
+            alert('Failed to remove item from cart');
         }
     };
 
-    useEffect(() => {
-        fetchCartItems();
-    }, []);
-
-    if (loading) {
-        return <div className="text-center">Loading cart items...</div>;
-    }
-
-    const handleRemoveItem = async (itemId) => {
-        // Logic to remove item from cart
-    };
+    if (error) return <div className="text-red-500">{error}</div>;
+    if (cartItems.length === 0) return <div>No items in your cart.</div>;
 
     return (
-        <div className="p-6 w-full">
-            <h2 className="text-2xl mb-4">Shopping Cart</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {cartItems.length > 0 ? (
-                    cartItems.map(item => (
-                        <div key={item._id} className="overflow-hidden flex flex-col border border-gray-200">
-                            <div className="relative w-full aspect-w-16 aspect-h-9">
-                                <img
-                                    src={item.imageUrl || 'https://via.placeholder.com/150'}
-                                    alt={item.title}
-                                    className="object-cover w-full h-[35vh]"
-                                />
-                            </div>
-                            <Link to={`/item/${item._id}`} className="p-2 flex-grow text-left">
-                                <p className="mb-1">{item.title}</p>
-                                <p className="text-red-600 mb-1">{item.price} EGP</p>
-                            </Link>
-                            <button
-                                className="p-2 bg-red-500 text-white rounded"
-                                onClick={() => handleRemoveItem(item._id)}
-                            >
-                                <FontAwesomeIcon icon={faTrashAlt} /> Remove
-                            </button>
-                        </div>
-                    ))
-                ) : (
-                    <div>No items in cart.</div>
-                )}
+        <div className="p-6">
+            <h1 className="text-3xl font-semibold mb-6">Your cart</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cartItems.map((item) => (
+                    <div key={item._id} className="bg-white p-4 shadow-md rounded">
+                        <img
+                            src={item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://via.placeholder.com/600'}
+                            alt={item.title}
+                            className="object-cover w-full h-48 rounded mb-4"
+                        />
+                        <h2 className="text-xl font-semibold">{item.title}</h2>
+                        <p className="text-gray-700 mb-2">{item.description}</p>
+                        <p className="text-red-600 text-lg mb-4">{item.price} EGP</p>
+                        <button 
+                            onClick={() => removeFromCart(item._id)}
+                            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition-colors mt-2"
+                        >
+                            Remove from cart
+                        </button>
+                    </div>
+                ))}
             </div>
         </div>
     );
