@@ -1,32 +1,35 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false); // Added loading state
-    const navigate = useNavigate(); // Initialize navigate
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Set loading to true
-    
+        setError(''); // Clear any previous error messages
+
         try {
-            const response = await axios.post('https://final-back-rho.vercel.app/api/login', {
+            const response = await axios.post('http://localhost:3001/api/auth/login', {
                 username,
                 password,
             });
 
-            // Store the username in local storage
-            localStorage.setItem('username', username);
-    
+            // Save the JWT token and username in local storage
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('username', username); // Save the username
+
             // Redirect to the home page on successful login
             navigate('/'); // Redirect to home
             window.location.reload(); // Refresh the page to reflect changes
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            console.error("Login Error:", err); // Log the error for debugging
+            setError(err.response?.data?.message || 'Login failed. Please try again.');
         } finally {
             setLoading(false); // Set loading to false after request
         }
@@ -50,11 +53,11 @@ const SignIn = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit" disabled={loading}> {/* Disable button while loading */}
+                <button type="submit" disabled={loading}>
                     {loading ? 'Signing In...' : 'Sign In'}
                 </button>
             </form>
-            {error && <p>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message in red */}
         </div>
     );
 };

@@ -6,25 +6,35 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setError('');
+        setSuccess('');
+    
         try {
-            // Log the form data before sending to see if email is correctly populated
             console.log({ username, password, email });
-
-            await axios.post('https://final-back-rho.vercel.app/api/register', {
+    
+            const response = await axios.post('http://localhost:3001/api/auth/signup', {
                 username,
                 password,
-                email,  // Make sure email is sent in the body
+                email,
             });
-            // Optionally clear the form or redirect after successful registration
+    
+            console.log("Response:", response.data);
+            setSuccess('Registration successful!');
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed');
-            console.log(err.response); // Log the error response to see what happened
+            console.error("Error object:", err);
+            if (err.response) {
+                console.error("Error response:", err.response);
+                setError(err.response.data.message || 'Registration failed');
+            } else {
+                setError('Network error or server not reachable. Please try again.');
+            }
         }
     };
+    
 
     return (
         <div>
@@ -53,7 +63,8 @@ const Register = () => {
                 />
                 <button type="submit">Register</button>
             </form>
-            {error && <p>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+            {success && <p style={{ color: 'green' }}>{success}</p>} {/* Display success message */}
         </div>
     );
 };
