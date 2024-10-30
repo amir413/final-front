@@ -11,7 +11,6 @@ import Register from './components/Register'; // Import your Register component
 import SignIn from './components/signin'; // Consistent casing
 import Cart from './components/Cart';
 import Wishlist from './components/Wishlist';
-import AddToWishlist from './components/AddToWishlist';
 
 function App() {
   const [userId, setUserId] = useState(''); // Define userId state
@@ -29,7 +28,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist userId={userId} />} /> {/* Pass userId as prop */}
-        <Route path="/AddToWishlist" element={<AddToWishlist userId={userId} />} /> {/* Pass userId as prop */}
       </Routes>
       <Footer /> {/* Footer will be rendered on all pages */}
     </Router>

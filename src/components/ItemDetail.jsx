@@ -53,14 +53,14 @@ function ItemDetail() {
             if (isInWishlist) {
                 // Remove item from wishlist
                 await axios.delete(`${wishlistBaseUrl}/remove`, {
-                    data: { username, productId: item._id }
+                    data: { username, itemId: item._id } // Use itemId instead of productId
                 });
                 alert('Item removed from wishlist!');
             } else {
                 // Add item to wishlist
                 await axios.post(`${wishlistBaseUrl}/add`, {
                     username, // Now using username
-                    productId: item._id
+                    itemId: item._id  // Use itemId instead of productId
                 });
                 alert('Item added to wishlist!');
             }
