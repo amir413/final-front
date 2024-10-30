@@ -1,3 +1,4 @@
+// Import required hooks and packages
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -8,9 +9,9 @@ function ItemDetail() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isInWishlist, setIsInWishlist] = useState(false);
-
-    // Assume userId is fetched from context or props
-    const userId = 'your_user_id_here'; // Replace with actual user ID logic
+    
+    // Fetch username from local storage or context
+    const username = localStorage.getItem('username'); // Adjust based on how you store username
 
     const baseUrl = process.env.NODE_ENV === 'production'
         ? 'https://final-back-rho.vercel.app/api/items'
@@ -37,9 +38,9 @@ function ItemDetail() {
 
     const checkWishlist = async (itemId) => {
         try {
-            const response = await axios.get(`${wishlistBaseUrl}/${userId}`);
+            const response = await axios.get(`${wishlistBaseUrl}/${username}`);
             const wishlistItems = response.data.items;
-            setIsInWishlist(wishlistItems.some((wishlistItem) => wishlistItem._id === itemId));
+            setIsInWishlist(wishlistItems.some((wishlistItem) => wishlistItem.productId === itemId));
         } catch (err) {
             console.error('Error checking wishlist:', err);
         }
@@ -50,13 +51,15 @@ function ItemDetail() {
             // Optimistically update the UI
             setIsInWishlist(!isInWishlist);
             if (isInWishlist) {
+                // Remove item from wishlist
                 await axios.delete(`${wishlistBaseUrl}/remove`, {
-                    data: { userId, productId: item._id }
+                    data: { username, productId: item._id }
                 });
                 alert('Item removed from wishlist!');
             } else {
+                // Add item to wishlist
                 await axios.post(`${wishlistBaseUrl}/add`, {
-                    userId,
+                    username, // Now using username
                     productId: item._id
                 });
                 alert('Item added to wishlist!');
@@ -70,7 +73,6 @@ function ItemDetail() {
     };
 
     const addToCart = () => {
-        // Implement your add to cart logic here
         alert('Add to cart functionality not implemented yet.');
     };
 
