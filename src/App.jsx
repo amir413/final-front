@@ -2,7 +2,7 @@ import React, { useState } from 'react'; // Import useState
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
 import Footer from './components/footer'; // Ensure correct casing for import
-import Navbar from './components/Navbar'; // Ensure correct casing for import
+import Navbar from './components/navbar'; // Ensure correct casing for import
 import Women from './components/Women';
 import Men from './components/Men';
 import Children from './components/Children';
