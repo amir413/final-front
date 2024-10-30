@@ -8,7 +8,7 @@ import Men from './components/Men';
 import Children from './components/Children';
 import ItemDetail from './components/ItemDetail';
 import Register from './components/Register'; // Import your Register component
-import SignIn from './components/SignIn'; // Consistent casing
+import SignIn from './components/signin'; // Consistent casing
 import Cart from './components/Cart';
 import Wishlist from './components/Wishlist';
 import AddToWishlist from './components/AddToWishlist';
