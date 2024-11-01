@@ -57,12 +57,14 @@ function ItemDetail() {
                 await axios.delete(`${wishlistBaseUrl}/remove`, {
                     data: { username, itemId: item._id } // Use itemId instead of productId
                 });
+                alert('Item removed from wishlist!');
             } else {
                 // Add item to wishlist
                 await axios.post(`${wishlistBaseUrl}/add`, {
                     username, // Now using username
                     itemId: item._id  // Use itemId instead of productId
                 });
+                alert('Item added to wishlist!');
             }
         } catch (err) {
             console.error('Error toggling wishlist:', err);
@@ -78,6 +80,7 @@ function ItemDetail() {
                 username,
                 itemId: item._id, // Use the item's ID
             });
+            alert('Item added to cart!');
         } catch (err) {
             console.error('Error adding item to cart:', err);
             alert('Failed to add item to cart');
