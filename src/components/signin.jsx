@@ -24,8 +24,8 @@ const SignIn = () => {
                 password,
             });
     
-            // Save only the JWT token in local storage
-            localStorage.setItem('token', response.data.username);
+            // Save only the username in local storage
+            localStorage.setItem('username', username);
     
             // Redirect to the home page on successful login
             navigate('/'); // Redirect to home
@@ -37,6 +37,7 @@ const SignIn = () => {
             setLoading(false); // Set loading to false after request
         }
     };
+    
     
 
     return (
