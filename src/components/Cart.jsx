@@ -32,7 +32,6 @@ export default function Cart() {  // Capitalized component name
             });
             // Update state to remove the item locally
             setCartItems(prevItems => prevItems.filter(item => item._id !== itemId));
-            alert('Item removed from cart');
         } catch (err) {
             console.error('Error removing item:', err);
             alert('Failed to remove item from cart');

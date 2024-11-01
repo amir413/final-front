@@ -32,7 +32,6 @@ export default function Wishlist() {
             });
             // Update state to remove the item locally
             setWishlistItems(prevItems => prevItems.filter(item => item._id !== itemId));
-            alert('Item removed from wishlist');
         } catch (err) {
             console.error('Error removing item:', err);
             alert('Failed to remove item from wishlist');
