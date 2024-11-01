@@ -16,12 +16,16 @@ const Register = () => {
         try {
             console.log({ username, password, email });
     
-            const response = await axios.post('http://localhost:3001/api/auth/signup', {
-                username,
-                password,
-                email,
-            });
-    
+            const baseURL = process.env.NODE_ENV === 'production' 
+            ? 'https://final-back-rho.vercel.app' 
+            : 'http://localhost:3001';
+        
+        const response = await axios.post(`${baseURL}/api/auth/signup`, {
+            username,
+            password,
+            email,
+        });
+        
             console.log("Response:", response.data);
             setSuccess('Registration successful!');
         } catch (err) {

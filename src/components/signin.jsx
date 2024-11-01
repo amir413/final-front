@@ -13,17 +13,20 @@ const SignIn = () => {
         e.preventDefault();
         setLoading(true); // Set loading to true
         setError(''); // Clear any previous error messages
-
+    
+        const baseURL = process.env.NODE_ENV === 'production' 
+            ? 'https://final-back-rho.vercel.app' 
+            : 'http://localhost:3001';
+    
         try {
-            const response = await axios.post('http://localhost:3001/api/auth/login', {
+            const response = await axios.post(`${baseURL}/api/auth/login`, {
                 username,
                 password,
             });
-
-            // Save the JWT token and username in local storage
+    
+            // Save only the JWT token in local storage
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', username); // Save the username
-
+    
             // Redirect to the home page on successful login
             navigate('/'); // Redirect to home
             window.location.reload(); // Refresh the page to reflect changes
@@ -34,6 +37,7 @@ const SignIn = () => {
             setLoading(false); // Set loading to false after request
         }
     };
+    
 
     return (
         <div>
