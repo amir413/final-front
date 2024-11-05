@@ -44,20 +44,24 @@ export default function Wishlist() {
     return (
         <div className="p-6">
             <h1 className="text-3xl font-semibold mb-6">Your Wishlist</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {wishlistItems.map((item) => (
-                    <div key={item._id} className="bg-white p-4 shadow-md rounded">
-                        <img
-                            src={item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://via.placeholder.com/600'}
-                            alt={item.title}
-                            className="object-cover w-full h-48 rounded mb-4"
-                        />
-                        <h2 className="text-xl font-semibold">{item.title}</h2>
-                        <p className="text-gray-700 mb-2">{item.description}</p>
-                        <p className="text-red-600 text-lg mb-4">{item.price} EGP</p>
+                    <div key={item._id} className="overflow-hidden flex flex-col border border-gray-200 relative max-w-[260px]">
+                        <div className="relative w-full aspect-w-16 aspect-h-9">
+                            <img
+                                src={item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://via.placeholder.com/600'}
+                                alt={item.title}
+                                className="object-cover w-full h-[35vh]"
+                                loading="lazy"
+                            />
+                        </div>
+                        <a href={`/item/${item._id}`} className="p-2 flex-grow text-left">
+                            <p className="mb-1">{item.title}</p>
+                            <p className="text-red-600 mb-1">{item.price} EGP</p>
+                        </a>
                         <button 
                             onClick={() => removeFromWishlist(item._id)}
-                            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition-colors mt-2"
+                            className="bg-black text-white py-2 px-4 hover:bg-red-600 transition-colors mt-2"
                         >
                             Remove from Wishlist
                         </button>

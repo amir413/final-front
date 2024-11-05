@@ -36,38 +36,52 @@ export default function Cart() {
         }
     };
 
+    const calculateTotal = () => {
+        return cartItems.reduce((acc, item) => acc + item.price, 0);
+    };
+
     if (error) return <div className="text-red-500">{error}</div>;
     if (cartItems.length === 0) return <div>No items in your cart.</div>;
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-6">Your cart</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <h1 className="text-3xl font-semibold mb-6">Your Cart</h1>
+            <div className="grid grid-cols-1 gap-6 mb-6">
                 {cartItems.map((item) => (
-                    <div key={item._id} className="bg-white p-4 shadow-md rounded">
+                    <div key={item._id} className="bg-white p-4 shadow-md rounded flex items-start">
                         <img
-                            src={item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://via.placeholder.com/600'}
+                            src={item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://via.placeholder.com/150'}
                             alt={item.title}
-                            className="object-cover w-full h-48 rounded mb-4"
+                            className="object-cover w-32 h-32 rounded mr-4"
                         />
-                        <h2 className="text-xl font-semibold">{item.title}</h2>
-                        <p className="text-gray-700 mb-2">{item.description}</p>
-                        <p className="text-red-600 text-lg mb-4">{item.price} EGP</p>
-                        <button 
-                            onClick={() => removeFromCart(item._id)}
-                            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition-colors mt-2"
-                        >
-                            Remove from cart
-                        </button>
+                        <div className="flex-1">
+                            <h2 className="text-xl font-semibold">{item.title}</h2>
+                            <p className="text-gray-700 mb-2">{item.description}</p>
+                            <p className="text-gray-500 mb-2">Size: XL</p> {/* Adjust size dynamically if available */}
+                            <div className="flex items-center mb-4">
+                                <span className="line-through text-gray-500 mr-2">1999 EGP</span>
+                                <span className="text-red-600 text-lg">{item.price} EGP</span>
+                            </div>
+                            <button 
+                                onClick={() => removeFromCart(item._id)}
+                                className="bg-black text-white py-2 px-4  hover:bg-gray-800 transition-colors mt-4"
+                            >
+                                Remove
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
-            <button 
-                onClick={() => navigate('/checkout')}
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors mt-4"
-            >
-                Proceed to Checkout
-            </button>
+            <div className="border-t pt-4 mt-4">
+                <h2 className="text-2xl font-semibold">Total: {calculateTotal()} EGP</h2>
+                <button 
+                    onClick={() => navigate('/checkout')}
+                    className="bg-black text-white py-2 px-4  hover:bg-gray-800 transition-colors mt-4"
+                    >
+                    Proceed to Checkout
+                </button>
+
+            </div>
         </div>
     );
 }
