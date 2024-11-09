@@ -198,7 +198,7 @@ function ItemDetail() {
                 <div>
                     <h1 className="text-3xl font-semibold mb-2">{item.title}</h1>
                     <p className="text-lg text-gray-700 mb-4">{item.description}</p>
-                    <p className="text-red-600 text-xl mb-4">{item.price} EGP</p>
+                    <p className="text-gray-600 text-xl mb-4">{item.price} EGP</p>
                 </div>
                 <div className="flex space-x-4">
                     <button 

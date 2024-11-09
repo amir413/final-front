@@ -36,7 +36,7 @@ export default function Checkout() {
         return itemsTotal + SHIPPING_FEE + COD_FEE;
     };
 
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (error) return <div className="text-black">{error}</div>;
     if (cartItems.length === 0) return <div>Your cart is empty.</div>;
 
     return (

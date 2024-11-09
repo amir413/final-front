@@ -57,7 +57,7 @@ export default function Wishlist() {
                         </div>
                         <a href={`/item/${item._id}`} className="p-2 flex-grow text-left">
                             <p className="mb-1">{item.title}</p>
-                            <p className="text-red-600 mb-1">{item.price} EGP</p>
+                            <p className="text-gray-600 mb-1">{item.price} EGP</p>
                         </a>
                         <button 
                             onClick={() => removeFromWishlist(item._id)}

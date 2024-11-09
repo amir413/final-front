@@ -202,7 +202,7 @@ export default function Women() {
 
                                     <Link to={`/item/${item._id}`} className="p-2 flex-grow text-left">
                                         <p className="mb-1">{item.title}</p>
-                                        <p className="text-red-600 mb-1">{item.price} EGP</p>
+                                        <p className="text-gray-600 mb-1">{item.price} EGP</p>
                                     </Link>
                                 </div>
                             );

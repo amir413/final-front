@@ -40,7 +40,7 @@ export default function Cart() {
         return cartItems.reduce((acc, item) => acc + item.price, 0);
     };
 
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (error) return <div className="text-black">{error}</div>;
     if (cartItems.length === 0) return <div>No items in your cart.</div>;
 
     return (
@@ -57,10 +57,9 @@ export default function Cart() {
                         <div className="flex-1">
                             <h2 className="text-xl font-semibold">{item.title}</h2>
                             <p className="text-gray-700 mb-2">{item.description}</p>
-                            <p className="text-gray-500 mb-2">Size: XL</p> {/* Adjust size dynamically if available */}
+                            <p className="text-gray-800 mb-2">Size: XL</p> {/* Adjust size dynamically if available */}
                             <div className="flex items-center mb-4">
-                                <span className="line-through text-gray-500 mr-2">1999 EGP</span>
-                                <span className="text-red-600 text-lg">{item.price} EGP</span>
+                                <span className="text-gray-500 text-lg">{item.price} EGP</span>
                             </div>
                             <button 
                                 onClick={() => removeFromCart(item._id)}
