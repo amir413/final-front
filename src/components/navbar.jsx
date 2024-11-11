@@ -4,11 +4,12 @@ import { FaShoppingCart, FaHeart } from 'react-icons/fa';
 
 const Navbar = () => {
   const [username, setUsername] = useState(localStorage.getItem('username'));
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);  // Track burger menu state
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownRef = useRef(null);
+  const navbarRef = useRef(null); // Add ref for navbar
 
   const handleLogout = () => {
     localStorage.removeItem('username');
@@ -48,9 +49,15 @@ const Navbar = () => {
     };
   }, [lastScrollY]);
 
+  // Get navbar height dynamically
+  const navbarHeight = navbarRef.current ? navbarRef.current.offsetHeight : 0;
+
+  // Adjust margin based on burger menu state (for mobile)
+  const dynamicMarginTop = isOpen ? '60px' : `${navbarHeight}px`;  // Remove space when burger is open
+
   return (
     <div>
-      <div className={`fixed top-0 w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className={`fixed top-0 w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`} ref={navbarRef}>
         <nav className="w-full bg-white shadow">
           <div className="flex justify-between items-center max-w-screen-lg mx-auto py-4 px-5">
             <div className="text-2xl">
@@ -122,9 +129,33 @@ const Navbar = () => {
         </nav>
       </div>
 
-      {/* Add space below the navbar */}
-      <div className="mt-[73px]"> {/* Adjust mt-20 for the height of the navbar */}
-        {/* Main content goes here */}
+      {/* Add dynamic margin-top based on navbar height and burger menu state */}
+      <div style={{ marginTop: dynamicMarginTop }}> 
+        {/* Mobile dropdown menu with slide-in animation */}
+        <div
+          className={`md:hidden bg-white transition-transform duration-300 transform ${isOpen ? 'translate-y-0' : '-translate-y-full'}`}
+        >
+          {isOpen && (
+            <ul className="flex flex-col space-y-4 p-9 border-t border-gray-300">
+              <li><Link to="/women" onClick={() => setIsOpen(false)}>Women</Link></li>
+              <li><Link to="/children" onClick={() => setIsOpen(false)}>Children</Link></li>
+              <li><Link to="/men" onClick={() => setIsOpen(false)}>Men</Link></li>
+              {username ? (
+                <>
+                  <li><Link to="/profile" onClick={() => setIsOpen(false)}>Profile</Link></li>
+                  <li onClick={handleLogout}>Logout</li>
+                </>
+              ) : (
+                <>
+                  <li><Link to="/signin" onClick={() => setIsOpen(false)}>Login</Link></li>
+                  <li><Link to="/register" onClick={() => setIsOpen(false)}>Register</Link></li>
+                </>
+              )}
+              <li><Link to="/cart" onClick={() => setIsOpen(false)}><FaShoppingCart size={24} /></Link></li>
+              <li><Link to="/wishlist" onClick={() => setIsOpen(false)}><FaHeart size={24} /></Link></li>
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
