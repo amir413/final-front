@@ -1,11 +1,12 @@
-// Checkout.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Spinner from './Spinner'; // Import the Spinner component
 
 export default function Checkout() {
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true); // Add loading state
     const navigate = useNavigate();
     const username = localStorage.getItem('username');
     
@@ -21,9 +22,11 @@ export default function Checkout() {
             try {
                 const response = await axios.get(`${cartBaseUrl}/${username}`);
                 setCartItems(response.data.items);
+                setLoading(false); // Set loading to false once data is fetched
             } catch (err) {
                 setError('Failed to load cart items');
                 console.error(err);
+                setLoading(false); // Set loading to false even if there's an error
             }
         };
 
@@ -36,8 +39,17 @@ export default function Checkout() {
         return itemsTotal + SHIPPING_FEE + COD_FEE;
     };
 
-    if (error) return <div className="text-black">{error}</div>;
-    if (cartItems.length === 0) return <div>Your cart is empty.</div>;
+    if (loading) {
+        return <Spinner />; // Show spinner while loading
+    }
+
+    if (error) {
+        return <div className="text-black">{error}</div>;
+    }
+
+    if (cartItems.length === 0) {
+        return <div>Your cart is empty.</div>;
+    }
 
     return (
         <div className="p-6">

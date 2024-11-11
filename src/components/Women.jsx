@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import Spinner from './Spinner'; // Import the Spinner component
 
 // FilterMenu Component
 const FilterMenu = ({ sortOrder, setSortOrder, handlePriceRangeClick, priceRange, handleScrollbarChange, menuOpen, toggleMenu }) => {
@@ -53,7 +54,7 @@ const FilterMenu = ({ sortOrder, setSortOrder, handlePriceRangeClick, priceRange
     );
 };
 
-// Main Component for Men's Items
+// Main Component for Women's Items
 export default function Women() {
     const [items, setItems] = useState([]);
     const [error, setError] = useState(null);
@@ -66,8 +67,8 @@ export default function Women() {
     const fetchItems = async () => {
         try {
             const endpoint = window.location.hostname === 'localhost'
-                ? 'http://localhost:3001/api/items?category=men' // Adjusted endpoint to fetch men's items
-                : 'https://final-back-rho.vercel.app/api/items?category=men';
+                ? 'http://localhost:3001/api/items?category=women'
+                : 'https://final-back-rho.vercel.app/api/items?category=women';
 
             const response = await axios.get(endpoint);
             const itemsWithActiveIndex = response.data.map(item => ({
@@ -103,7 +104,7 @@ export default function Women() {
     };
 
     if (loading) {
-        return <div className="text-center">Loading items...</div>;
+        return <Spinner />;  // Show the spinner while loading
     }
 
     if (error) {

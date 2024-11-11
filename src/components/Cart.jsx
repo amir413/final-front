@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Spinner from './Spinner'; // Import Spinner component
 
 export default function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true); // State to track loading
     const navigate = useNavigate();
     const username = localStorage.getItem('username');
 
@@ -17,9 +19,11 @@ export default function Cart() {
             try {
                 const response = await axios.get(`${cartBaseUrl}/${username}`);
                 setCartItems(response.data.items);
+                setLoading(false); // Set loading to false once data is fetched
             } catch (err) {
                 setError('Failed to load cart items');
                 console.error(err);
+                setLoading(false); // Set loading to false even if there's an error
             }
         };
 
@@ -40,8 +44,17 @@ export default function Cart() {
         return cartItems.reduce((acc, item) => acc + item.price, 0);
     };
 
-    if (error) return <div className="text-black">{error}</div>;
-    if (cartItems.length === 0) return <div>No items in your cart.</div>;
+    if (loading) {
+        return <Spinner />; // Show spinner while loading
+    }
+
+    if (error) {
+        return <div className="text-black">{error}</div>;
+    }
+
+    if (cartItems.length === 0) {
+        return <div>No items in your cart.</div>;
+    }
 
     return (
         <div className="p-6">
@@ -63,7 +76,7 @@ export default function Cart() {
                             </div>
                             <button 
                                 onClick={() => removeFromCart(item._id)}
-                                className="bg-black text-white py-2 px-4  hover:bg-gray-800 transition-colors mt-4"
+                                className="bg-black text-white py-2 px-4 hover:bg-gray-800 transition-colors mt-4"
                             >
                                 Remove
                             </button>
@@ -75,11 +88,10 @@ export default function Cart() {
                 <h2 className="text-2xl font-semibold">Total: {calculateTotal()} EGP</h2>
                 <button 
                     onClick={() => navigate('/checkout')}
-                    className="bg-black text-white py-2 px-4  hover:bg-gray-800 transition-colors mt-4"
-                    >
+                    className="bg-black text-white py-2 px-4 hover:bg-gray-800 transition-colors mt-4"
+                >
                     Proceed to Checkout
                 </button>
-
             </div>
         </div>
     );

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
+
 function ItemDetail() {
     const { id } = useParams();
     const [item, setItem] = useState(null);
