@@ -55,7 +55,7 @@ const FilterMenu = ({ sortOrder, setSortOrder, handlePriceRangeClick, priceRange
 };
 
 // Main Component for men's Items
-export default function men() {
+export default function Men() {
     const [items, setItems] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -73,8 +73,7 @@ export default function men() {
             const response = await axios.get(endpoint);
             const itemsWithActiveIndex = response.data.map(item => ({
                 ...item,
-                activeImageIndex: 0,
-                swipeCount: 0
+                activeImageIndex: 0
             }));
             setItems(itemsWithActiveIndex);
             setError(null);
@@ -103,14 +102,6 @@ export default function men() {
         );
     };
 
-    if (loading) {
-        return <Spinner />;  // Show the spinner while loading
-    }
-
-    if (error) {
-        return <div className="text-center text-red-600">{error}</div>;
-    }
-
     const handlePriceRangeClick = () => {
         setPriceRange([100, 200]);
     };
@@ -124,24 +115,38 @@ export default function men() {
         setMenuOpen(!menuOpen);
     };
 
-    const handleImageChange = (index, delta) => {
-        setItems(prevItems => {
-            const newItems = [...prevItems];
-            const totalImages = newItems[index].imageUrls.length;
-            const currentIndex = newItems[index].activeImageIndex;
-
-            newItems[index].swipeCount += 1;
-
-            if (newItems[index].swipeCount > 2) {
-                newItems[index].swipeCount = 0;
-                newItems[index].activeImageIndex = (currentIndex + delta + totalImages) % totalImages;
-            } else {
-                newItems[index].activeImageIndex = (currentIndex + delta + totalImages) % totalImages;
-            }
-
-            return newItems;
-        });
+    const handleImageHover = (id, event) => {
+        const imageElement = event.target;
+        const rect = imageElement.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left; // X position within the element
+        const width = rect.width;
+    
+        // Get the hovered card's index
+        setItems((prevItems) =>
+            prevItems.map((item) => {
+                if (item._id === id) {
+                    const totalImages = item.imageUrls.length; // Total images for the card
+                    const hoverIndex = Math.floor((mouseX / width) * totalImages); // Determine image index dynamically
+                    return {
+                        ...item,
+                        activeImageIndex: Math.min(hoverIndex, totalImages - 1), // Ensure index stays within bounds
+                    };
+                }
+                return item; // Return other items unchanged
+            })
+        );
     };
+    
+    
+    
+
+    if (loading) {
+        return <Spinner />;
+    }
+
+    if (error) {
+        return <div className="text-center text-red-600">{error}</div>;
+    }
 
     return (
         <div className="p-6 w-full relative">
@@ -173,32 +178,18 @@ export default function men() {
                             return (
                                 <div key={item._id} className="overflow-hidden flex flex-col border border-gray-200 relative">
                                     <div className="relative w-full aspect-w-16 aspect-h-9">
-                                        <img
-                                            src={Array.isArray(item.imageUrls) && item.imageUrls.length > 0
+                                    <img
+                                        src={
+                                            Array.isArray(item.imageUrls) && item.imageUrls.length > 0
                                                 ? item.imageUrls[activeImageIndex]
-                                                : 'https://via.placeholder.com/150'}
-                                            alt={item.title}
-                                            className="object-cover w-full h-[35vh]"
-                                            loading="lazy"
-                                        />
-                                        {item.imageUrls.length > 1 && (
-                                            <>
-                                                <button
-                                                    onClick={() => handleImageChange(index, -1)}
-                                                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full"
-                                                    aria-label="Previous image"
-                                                >
-                                                    &lt;
-                                                </button>
-                                                <button
-                                                    onClick={() => handleImageChange(index, 1)}
-                                                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full"
-                                                    aria-label="Next image"
-                                                >
-                                                    &gt;
-                                                </button>
-                                            </>
-                                        )}
+                                                : 'https://via.placeholder.com/150'
+                                        }
+                                        alt={item.title}
+                                        className="object-cover w-full h-[35vh]"
+                                        loading="lazy"
+                                        onMouseMove={(event) => handleImageHover(item._id, event)}
+                                    />
+
                                     </div>
 
                                     <Link to={`/item/${item._id}`} className="p-2 flex-grow text-left">
